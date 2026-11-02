@@ -50,5 +50,50 @@ public class MappingProfile : Profile
                 dest => dest.UserFullName,
                 opt => opt.MapFrom(
                     src => src.User.FirstName + " " + src.User.LastName));
+
+        CreateMap<DependentRequestDTO, Dependent>();
+        CreateMap<Dependent, DependentResponseDTO>()
+            .ForMember(
+                dest => dest.UserFullName,
+                opt => opt.MapFrom(
+                    src => src.User.FirstName + " " + src.User.LastName))
+            .ForMember(
+                dest => dest.FamilyGroupName,
+                opt => opt.MapFrom(
+                    src => src.FamilyGroup.Name))
+            .ForMember(
+                dest => dest.AllergyId,
+                opt => opt.MapFrom(
+                    src => src.DependentAllergies
+                    .FirstOrDefault() != null
+                    ? src.DependentAllergies.FirstOrDefault().AllergyId
+                    : 0))
+            .ForMember(
+                dest => dest.AllergyName,
+                opt => opt.MapFrom(
+                    src => src.DependentAllergies
+                    .FirstOrDefault() != null
+                    && src.DependentAllergies.FirstOrDefault().Allergy != null
+                    ? src.DependentAllergies.FirstOrDefault().Allergy.Name
+                    : string.Empty));
+
+        CreateMap<DependentAllergyRequestDTO, DependentAllergy>();
+        CreateMap<DependentAllergy, DependentAllergyResponseDTO>()
+            .ForMember(
+                dest => dest.AllergyId,
+                opt => opt.MapFrom(
+                    src => src.Allergy.Id))
+            .ForMember(
+                dest => dest.AllergyName,
+                opt => opt.MapFrom(
+                    src => src.Allergy.Name))
+            .ForMember(
+                dest => dest.DependentId,
+                opt => opt.MapFrom(
+                    src => src.Dependent.Id))
+            .ForMember(
+                dest => dest.DependentName, 
+                opt => opt.MapFrom(
+                    src => src.Dependent.Name));
     }
 }
