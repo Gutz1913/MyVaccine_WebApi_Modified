@@ -1,0 +1,54 @@
+﻿using AutoMapper;
+using MyVaccine.WebApi.DTOs.Request;
+using MyVaccine.WebApi.DTOs.Response;
+using MyVaccine.WebApi.Models;
+
+namespace MyVaccine.WebApi.Configurations.Mappings;
+
+public class MappingProfile : Profile
+{
+    public MappingProfile()
+    {
+        CreateMap<UpdateUserRequestDTO, User>();
+        CreateMap<User, UserResponseDTO>()
+            .ForMember(
+                dest => dest.UserName,
+                opt => opt.MapFrom(
+                    src => src.AspNetUser != null ?
+                    src.AspNetUser.UserName : string.Empty))
+            .ForMember(
+                dest => dest.DependentsCount,
+                opt => opt.MapFrom(
+                    src => src != null ? src.Dependents.Count : 0))
+            .ForMember(
+                dest => dest.AllergyId,
+                opt => opt.MapFrom(
+                    src => src.UserAllergies.FirstOrDefault()
+                    != null ? src.UserAllergies.FirstOrDefault().AllergyId : 0))
+            .ForMember(
+                dest => dest.AllergyName,
+                opt => opt.MapFrom(
+                    src => src.UserAllergies.FirstOrDefault()
+                    != null && src.UserAllergies.FirstOrDefault().Allergy
+                    != null ? src.UserAllergies.FirstOrDefault().Allergy.Name : string.Empty));
+
+        CreateMap<UserAllergyRequestDTO, UserAllergy>();
+        CreateMap<UserAllergy, UserAllergyResponseDTO>()
+            .ForMember(
+                dest => dest.AllergyId,
+                opt => opt.MapFrom(
+                    src => src.Allergy.Id))
+            .ForMember(
+                dest => dest.AllergyName,
+                opt => opt.MapFrom(
+                    src => src.Allergy.Name))
+            .ForMember(
+                dest => dest.UserId,
+                opt => opt.MapFrom(
+                    src => src.User.Id))
+            .ForMember(
+                dest => dest.UserFullName,
+                opt => opt.MapFrom(
+                    src => src.User.FirstName + " " + src.User.LastName));
+    }
+}
