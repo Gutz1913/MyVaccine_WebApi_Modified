@@ -25,7 +25,7 @@ public static class DependencyInjections
         #region Services Injection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IDependentService, DependentService>();
-        //services.AddScoped<IFamilyGroupService, FamilyGroupService>();
+        services.AddScoped<IFamilyGroupService, FamilyGroupService>();
         services.AddScoped<IAllergyService, AllergyService>();
         //services.AddScoped<IVaccineService, VaccineService>();
         //services.AddScoped<IVaccineCategoryService, VaccineCategoryService>();
