@@ -95,5 +95,8 @@ public class MappingProfile : Profile
                 dest => dest.DependentName, 
                 opt => opt.MapFrom(
                     src => src.Dependent.Name));
+
+        CreateMap<AllergyRequestDTO, Allergy>();
+        CreateMap<Allergy, AllergyResponseDTO>();
     }
 }
