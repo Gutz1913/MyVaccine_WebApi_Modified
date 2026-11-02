@@ -1,4 +1,6 @@
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using MyVaccine.WebApi.Configurations;
 using MyVaccine.WebApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
