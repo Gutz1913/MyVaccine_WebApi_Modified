@@ -98,5 +98,8 @@ public class MappingProfile : Profile
 
         CreateMap<AllergyRequestDTO, Allergy>();
         CreateMap<Allergy, AllergyResponseDTO>();
+
+        CreateMap<FamilyGroupRequestDTO, FamilyGroup>();
+        CreateMap<FamilyGroup, FamilyGroupResponseDTO>();
     }
 }
