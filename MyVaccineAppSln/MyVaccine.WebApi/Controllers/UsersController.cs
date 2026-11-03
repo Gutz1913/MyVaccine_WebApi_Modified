@@ -46,7 +46,7 @@ public class UsersController : ControllerBase
         }
     }
 
-    [HttpPost("register-allergy")]
+    [HttpPost("register-allergies")]
     public async Task<IActionResult> RegisterAllergy(UserAllergyRequestDTO request)
     {
         try
