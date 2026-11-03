@@ -10,7 +10,6 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var configuration = builder.Configuration;
-
 builder.Services.SetDatabaseConfiguration(configuration);
 builder.Services.SetMyVaccineAuthConfiguration(configuration);
 builder.Services.SetDependencyInjection();
