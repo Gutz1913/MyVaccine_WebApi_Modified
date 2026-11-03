@@ -171,5 +171,20 @@ public class MappingProfile : Profile
                 dest => dest.Description,
                 opt => opt.MapFrom(
                     src => src.VaccineCategory.Description));
+
+        CreateMap<VaccineRecordRequestDTO, VaccineRecord>();
+        CreateMap<VaccineRecord, VaccineRecordResponseDTO>()
+            .ForMember(
+                dest => dest.UserFullName,
+                opt => opt.MapFrom(
+                    src => src.User.FirstName + " " + src.User.LastName))
+            .ForMember(
+                dest => dest.DependentName,
+                opt => opt.MapFrom(
+                    src => src.Dependent.Name))
+            .ForMember(
+                dest => dest.VaccineName,
+                opt => opt.MapFrom(
+                    src => src.Vaccine.Name));
     }
 }
