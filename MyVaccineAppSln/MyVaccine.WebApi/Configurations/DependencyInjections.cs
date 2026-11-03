@@ -29,7 +29,7 @@ public static class DependencyInjections
         services.AddScoped<IAllergyService, AllergyService>();
         services.AddScoped<IVaccineService, VaccineService>();
         services.AddScoped<IVaccineCategoryService, VaccineCategoryService>();
-        //services.AddScoped<IVaccineRecordService, VaccineRecordService>();
+        services.AddScoped<IVaccineRecordService, VaccineRecordService>();
         #endregion
 
         return services;
