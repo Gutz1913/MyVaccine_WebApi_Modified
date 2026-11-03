@@ -155,6 +155,7 @@ public class UserService : IUserService
             .Include(u => u.Dependents)
             .Include(u => u.UserAllergies)
                 .ThenInclude(ua => ua.Allergy)
+            .Include(u => u.AspNetUser)
             .AsNoTracking()
             .ToListAsync();
 
@@ -170,6 +171,7 @@ public class UserService : IUserService
             .Include(u => u.Dependents)
             .Include(u => u.UserAllergies)
                 .ThenInclude(ua => ua.Allergy)
+            .Include(u => u.AspNetUser)
             .FirstOrDefaultAsync();
 
         if (user == null)
@@ -251,6 +253,6 @@ public class UserService : IUserService
         };
 
         await _userAllergyRepository.Add(userAllergy);
-        _mapper.Map<UserAllergyRequestDTO>(userAllergy);
+        _mapper.Map<UserAllergyResponseDTO>(userAllergy);
     }
 }
