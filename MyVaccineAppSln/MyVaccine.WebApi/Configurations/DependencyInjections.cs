@@ -28,7 +28,7 @@ public static class DependencyInjections
         services.AddScoped<IFamilyGroupService, FamilyGroupService>();
         services.AddScoped<IAllergyService, AllergyService>();
         services.AddScoped<IVaccineService, VaccineService>();
-        //services.AddScoped<IVaccineCategoryService, VaccineCategoryService>();
+        services.AddScoped<IVaccineCategoryService, VaccineCategoryService>();
         //services.AddScoped<IVaccineRecordService, VaccineRecordService>();
         #endregion
 
