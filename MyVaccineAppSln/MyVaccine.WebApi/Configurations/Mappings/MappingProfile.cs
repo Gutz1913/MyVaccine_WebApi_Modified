@@ -132,5 +132,44 @@ public class MappingProfile : Profile
                     ? src.VaccineCategory_Vaccines.FirstOrDefault()
                     .VaccineCategory.Description
                     : string.Empty));
+
+        CreateMap<VaccineCategoryRequestDTO, VaccineCategory>();
+        CreateMap<VaccineCategory, VaccineCategoryResponseDTO>();
+
+        CreateMap<VaccineCategory_VaccineRequestDTO, VaccineCategory_Vaccine>();
+        CreateMap<VaccineCategory_Vaccine, VaccineCategory_VaccineResponseDTO>()
+            .ForMember(
+                dest => dest.VaccineId,
+                opt => opt.MapFrom(
+                    src => src.Vaccine.Id))
+            .ForMember(
+                dest => dest.VaccineName,
+                opt => opt.MapFrom(
+                    src => src.Vaccine.Name))
+            .ForMember(
+                dest => dest.VaccineCategoryId,
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory.Id))
+            .ForMember(
+                dest => dest.VaccineCategoryName,
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory.Name))
+            .ForMember(
+                dest => dest.VaccineCategoryDescription,
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory.Description));
+        CreateMap<VaccineCategory_Vaccine, VaccineCategoryResponseDTO>()
+            .ForMember(
+                dest => dest.Id,
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory.Id))
+            .ForMember(
+                dest => dest.Name,
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory.Name))
+            .ForMember(
+                dest => dest.Description,
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory.Description));
     }
 }
