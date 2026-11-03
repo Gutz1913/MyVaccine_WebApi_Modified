@@ -12,6 +12,7 @@ public static class DependencyInjections
     {
         #region Repositories Injection
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IBaseRepository<UserAllergy>, BaseRepository<UserAllergy>>();
         services.AddScoped<IBaseRepository<Dependent>, BaseRepository<Dependent>>();
         services.AddScoped<IBaseRepository<FamilyGroup>, BaseRepository<FamilyGroup>>();
         services.AddScoped<IBaseRepository<Allergy>, BaseRepository<Allergy>>();
