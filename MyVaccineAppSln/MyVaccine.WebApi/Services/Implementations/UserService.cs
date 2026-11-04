@@ -190,6 +190,7 @@ public class UserService : IUserService
             .Include(u => u.Dependents)
             .Include(u => u.UserAllergies)
                 .ThenInclude(ua => ua.Allergy)
+            .Include(u => u.AspNetUser)
             .FirstOrDefaultAsync();
 
         if (user == null)
@@ -205,6 +206,7 @@ public class UserService : IUserService
             .Include(u => u.Dependents)
             .Include(u => u.UserAllergies)
                 .ThenInclude(ua => ua.Allergy)
+            .Include(u => u.AspNetUser)
             .FirstOrDefaultAsync();
 
         var response = _mapper.Map<UserResponseDTO>(userWithDetails);
@@ -219,6 +221,7 @@ public class UserService : IUserService
             .Include(u => u.Dependents)
             .Include(u => u.UserAllergies)
                 .ThenInclude(ua => ua.Allergy)
+            .Include(u => u.AspNetUser)
             .FirstOrDefaultAsync();
 
         if (user == null)
