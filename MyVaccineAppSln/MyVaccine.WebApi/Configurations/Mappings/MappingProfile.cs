@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MyVaccine.WebApi.DTOs;
 using MyVaccine.WebApi.DTOs.Request;
 using MyVaccine.WebApi.DTOs.Response;
 using MyVaccine.WebApi.Models;
@@ -9,6 +10,8 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        CreateMap<User, UserDTO>().ReverseMap();
+
         CreateMap<UpdateUserRequestDTO, User>();
         CreateMap<User, UserResponseDTO>()
             .ForMember(
@@ -16,6 +19,10 @@ public class MappingProfile : Profile
                 opt => opt.MapFrom(
                     src => src.AspNetUser != null ?
                     src.AspNetUser.UserName : string.Empty))
+            .ForMember(
+                dest => dest.Photo,
+                opt => opt.MapFrom(
+                    src => src.Photo))
             .ForMember(
                 dest => dest.DependentsCount,
                 opt => opt.MapFrom(
