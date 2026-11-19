@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MyVaccine.WebApi.DTOs.Request;
 using MyVaccine.WebApi.Models;
 using MyVaccine.WebApi.Repositories.Contracts;
@@ -18,35 +19,52 @@ public class UserRepository : BaseRepository<User>, IUserRepository
 
     public async Task<IdentityResult> AddUser(RegisterRequestDTO request)
     {
-        var response = new IdentityResult();
         using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
-            var user = new ApplicationUser
+            try
             {
-                UserName = request.UserName.ToLower(),
-                Email = request.UserName
-            };
+                var user = new ApplicationUser
+                {
+                    UserName = request.UserName.ToLower(),
+                    Email = request.UserName
+                };
 
-            var result = await _userManager.CreateAsync(user, request.Password);
-            response = result;
+                var result = await _userManager.CreateAsync(user, request.Password);
 
-            if (!result.Succeeded)
-            {
-                return response;
+                if (!result.Succeeded)
+                {
+                    return result;  // ✅ Retornar resultado directo
+                }
+
+                var newUser = new User
+                {
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    BirthDate = request.BirthDate,
+                    AspNetUserId = user.Id,
+                    CreatedAt = DateTime.UtcNow  // ✅ Auditoría
+                };
+
+                await _context.Users.AddAsync(newUser);
+                await _context.SaveChangesAsync();
+                scope.Complete();
+
+                return result;
             }
-
-            var newUser = new User
+            catch (DbUpdateException ex)
             {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                AspNetUserId = user.Id
-            };
-
-            await _context.Users.AddAsync(newUser);
-            await _context.SaveChangesAsync();
-            scope.Complete();
+                // ✅ Error de BD
+                return IdentityResult.Failed(
+                    new IdentityError { Code = "DatabaseError", Description = "Error en base de datos" }
+                );
+            }
+            catch (Exception ex)
+            {
+                // ✅ Error inesperado
+                return IdentityResult.Failed(
+                    new IdentityError { Code = "UnexpectedError", Description = "Error inesperado" }
+                );
+            }
         }
-
-        return response;
     }
 }
