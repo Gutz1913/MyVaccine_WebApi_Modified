@@ -38,10 +38,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
             entity.Property(u => u.LastName)
                   .IsRequired()
                   .HasMaxLength(30);
-
-            entity.HasOne(u => u.AspNetUser)
-                  .WithMany()
-                  .HasForeignKey(u => u.AspNetUserId);
         });
 
         // === Dependent Configurations === //
@@ -121,6 +117,10 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
             entity.Property(fg => fg.Name)
                   .IsRequired()
                   .HasMaxLength(30);
+
+            entity.HasMany(fg => fg.Users)
+                  .WithMany(u => u.FamilyGroups)
+                  .UsingEntity(j => j.ToTable("UserFamilyGroups"));
 
             entity.HasIndex(fg => fg.Name)
                   .IsUnique();
