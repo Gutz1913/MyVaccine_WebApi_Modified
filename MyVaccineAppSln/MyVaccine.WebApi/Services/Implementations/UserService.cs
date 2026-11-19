@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MyVaccine.WebApi.DTOs;
 using MyVaccine.WebApi.DTOs.Request;
 using MyVaccine.WebApi.DTOs.Response;
 using MyVaccine.WebApi.Models;
@@ -23,8 +24,8 @@ public class UserService : IUserService
     private readonly IMapper _mapper;
 
     public UserService(
-        UserManager<IdentityUser> userManager, 
-        IConfiguration configuration, 
+        UserManager<IdentityUser> userManager,
+        IConfiguration configuration,
         IUserRepository userRepository,
         IBaseRepository<Allergy> allergyRepository,
         IBaseRepository<UserAllergy> userAllergyRepository,
@@ -74,7 +75,7 @@ public class UserService : IUserService
                 new Claim(ClaimTypes.Name, user.UserName)
             };
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("A2*7gF9@D#1hJ$5mNpRtVwYzZ&k8zbxRjHa"));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(
@@ -118,7 +119,7 @@ public class UserService : IUserService
                     new Claim(ClaimTypes.Name, user.UserName)
                 };
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("A2*7gF9@D#1hJ$5mNpRtVwYzZ&k8zbxRjHa"));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(
@@ -148,6 +149,26 @@ public class UserService : IUserService
         return response;
     }
 
+
+    public async Task<UserDTO> GetUserInfo(string email)
+    {
+        var user = await _userRepository
+            .FindBy(u => u.AspNetUser.UserName == email)
+            .Include(u => u.Dependents)
+            .Include(u => u.FamilyGroups)
+            .Include(u => u.VaccineRecords)
+            .Include(u => u.UserAllergies)
+                .ThenInclude(ua => ua.Allergy)
+            .FirstOrDefaultAsync();
+
+        if (user == null)
+            throw new KeyNotFoundException($"Usuario {email} no encontrado.");
+
+        var response = _mapper.Map<UserDTO>(user);
+
+        return response;
+    }
+
     public async Task<IEnumerable<UserResponseDTO>> GetAll()
     {
         var users = await _userRepository
@@ -159,7 +180,7 @@ public class UserService : IUserService
             .AsNoTracking()
             .ToListAsync();
 
-        var response =  _mapper.Map<IEnumerable<UserResponseDTO>>(users);
+        var response = _mapper.Map<IEnumerable<UserResponseDTO>>(users);
 
         return response;
     }
@@ -177,7 +198,7 @@ public class UserService : IUserService
         if (user == null)
             throw new KeyNotFoundException($"Usuario con ID {id} no encontrado.");
 
-        
+
         var response = _mapper.Map<UserResponseDTO>(user);
 
         return response;
@@ -199,6 +220,7 @@ public class UserService : IUserService
         // Actualizar los campos del usuario
         user.FirstName = request.FirstName;
         user.LastName = request.LastName;
+        user.BirthDate = request.BirthDate;
 
         await _userRepository.Update(user);
         var userWithDetails = await _userRepository
