@@ -31,6 +31,7 @@ public static class DependencyInjections
         services.AddScoped<IVaccineService, VaccineService>();
         services.AddScoped<IVaccineCategoryService, VaccineCategoryService>();
         services.AddScoped<IVaccineRecordService, VaccineRecordService>();
+        services.AddScoped<SaveProfileImageUserService>();
         #endregion
 
         return services;
